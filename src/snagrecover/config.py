@@ -91,20 +91,28 @@ def init_config(args: list):
 		args.usb_path = args.rom_usb
 
 	if soc_family != "am335x":
-		if args.usb_path is None:
-			usb_ids = default_usb_ids[soc_family]
-			if isinstance(usb_ids, dict):
-				usb_ids = usb_ids[soc_model]
-
-			recovery_config["usb_path"] = usb_addr_to_path(usb_ids)
-
-			if recovery_config["usb_path"] is None:
-				access_error("USB", usb_ids)
-
+		# Renesas RZ supports both UART and USB, but defaults to UART
+		# Only configure USB if explicitly requested
+		if soc_family == "renesas_rz":
+			if args.usb_path is not None:
+				recovery_config["usb_path"] = usb_addr_to_path(args.usb_path)
+				if recovery_config["usb_path"] is None:
+					access_error("USB", args.usb_path)
 		else:
-			recovery_config["usb_path"] = usb_addr_to_path(args.usb_path)
-			if recovery_config["usb_path"] is None:
-				access_error("USB", args.usb_path)
+			if args.usb_path is None:
+				usb_ids = default_usb_ids[soc_family]
+				if isinstance(usb_ids, dict):
+					usb_ids = usb_ids[soc_model]
+
+				recovery_config["usb_path"] = usb_addr_to_path(usb_ids)
+
+				if recovery_config["usb_path"] is None:
+					access_error("USB", usb_ids)
+
+			else:
+				recovery_config["usb_path"] = usb_addr_to_path(args.usb_path)
+				if recovery_config["usb_path"] is None:
+					access_error("USB", args.usb_path)
 
 	fw_configs = {}
 	if args.firmware:
@@ -129,6 +137,14 @@ def init_config(args: list):
 				f"firmware config passed to CLI did not evaluate to dict: {fw_configs}"
 			)
 		recovery_config["firmware"] = fw_configs
+
+	# Extract UART-specific parameters for Renesas RZ and AM335x
+	if hasattr(args, 'serial_port') and args.serial_port is not None:
+		recovery_config["serial_port"] = args.serial_port
+	if hasattr(args, 'baudrate') and args.baudrate is not None:
+		recovery_config["baudrate"] = args.baudrate
+	if hasattr(args, 'enable_speed_up') and args.enable_speed_up is not None:
+		recovery_config["enable_speed_up"] = args.enable_speed_up
 
 	# store input arguments in config
 	recovery_config["args"] = vars(args)
