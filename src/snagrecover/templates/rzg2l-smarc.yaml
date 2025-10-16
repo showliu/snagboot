@@ -1,0 +1,71 @@
+# Renesas RZ/G2L SMARC EVK configuration template
+#
+# This template provides firmware configuration for recovering
+# a Renesas RZ/G2L SMARC Evaluation Kit via SCIF Download Mode.
+#
+# Usage:
+#   snagrecover -s rzg2l --serial-port /dev/ttyUSB0 \
+#     -f templates/rzg2l-smarc.yaml
+#
+# Requirements:
+#   - RZ/G2L board in SCIF Download Mode (check boot switches)
+#   - Flash Writer binary for RZ/G2L
+
+flash_writer:
+        path: Flash_Writer_SCIF_RZG2L_SMARC_PMIC_DDR4_2GB_1PCS.mot
+        description: Flash Writer for RZ/G2L SMARC(PMIC Edition) with DDR4 2GB
+
+# Optional: Automatic firmware flashing
+# Uncomment and configure to automatically flash firmware after loading Flash Writer
+#firmware_to_flash:
+#        # BL2 (Boot Loader 2) - typically at 0x0 in QSPI Flash
+#        - name: bl2
+#          path: bl2_bp-rzg2l.srec
+#          target: qspi              # qspi or emmc
+#          format: srec              # srec or bin
+#          address: 0x00000000       # Flash save address
+#          program_address: 0x11E00  # Program top address (for S-record)
+#
+#        # FIP (Firmware Image Package) - contains TF-A and U-Boot
+#        - name: fip
+#          path: fip-rzg2l.srec
+#          target: qspi
+#          format: srec
+#          address: 0x0001D200
+#          program_address: 0x00000000
+#
+#        # BL2 Boot Loader (S-record format to eMMC boot partition 1)
+#        - name: bl2
+#          path: bl2_bp-smarc-rzg2l_pmic.srec
+#          target: emmc
+#          format: srec
+#          partition: 1                    # Boot partition 1
+#          start_sector: 0x1               # Start at sector 1
+#          program_address: 0x11E00        # Temporary RAM address
+
+#        # FIP (Firmware Image Package: TF-A + U-Boot to eMMC boot partition 1)
+#        - name: fip
+#          path: fip-smarc-rzg2l_pmic.srec
+#          target: emmc
+#          format: srec
+#          partition: 1                    # Boot partition 1
+#          start_sector: 0x100             # Start sector for FIP
+#          program_address: 0x00000000     # Temporary RAM address
+#
+#        # Example: Binary file to eMMC boot partition
+#        - name: bootloader-emmc
+#          path: bl2_bp-smarc-rzg2l_pmic.bin
+#          target: emmc
+#          format: bin               # eMMC only supports binary
+#          partition: 1              # 0=User, 1=Boot1, 2=Boot2
+#          start_sector: 0x1         # Start sector in eMMC
+#          program_address: 0x11E00  # Program start address
+#
+#        # FIP (Firmware Image Package: TF-A + U-Boot to eMMC boot partition 1)
+#        - name: fip
+#          path: bl2_bp-smarc-rzg2l_pmic.bin
+#          target: emmc
+#          format: bin               # eMMC only supports binary
+#          partition: 1              # 0=User, 1=Boot1, 2=Boot2
+#          start_sector: 0x100         # Start sector in eMMC
+#          program_address: 0x00000000  # Program start address
