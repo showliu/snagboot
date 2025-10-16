@@ -194,3 +194,5 @@ untested:
         family: amlogic
   s922x:
         family: amlogic
+  rzg2l:
+        family: renesas_rz
