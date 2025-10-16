@@ -253,6 +253,10 @@ def get_recovery(soc_family: str):
 		from snagrecover.recoveries.amlogic import main as amlogic_recovery
 
 		return amlogic_recovery
+	elif soc_family == "renesas_rz":
+		from snagrecover.recoveries.renesas_rz import main as renesas_rz_recovery
+
+		return renesas_rz_recovery
 	else:
 		cli_error(f"unsupported board family {soc_family}")
 
