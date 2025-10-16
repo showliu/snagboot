@@ -71,7 +71,24 @@ Templates:
 	optional.add_argument(
 		"--uart", help="use UART for AM335x recovery", metavar="/dev/ttyx"
 	)
+	optional.add_argument(
+		"--serial-port",
+		help="serial port for UART-based recovery (Renesas RZ, etc.)",
+		metavar="/dev/ttyUSB0"
+	)
 	optional.add_argument("--baudrate", help="UART baudrate", default=115200)
+	optional.add_argument(
+		"--enable-speed-up",
+		help="enable UART speed negotiation for Renesas RZ (default: enabled)",
+		action="store_true",
+		default=True
+	)
+	optional.add_argument(
+		"--no-speed-up",
+		help="disable UART speed negotiation for Renesas RZ",
+		action="store_false",
+		dest="enable_speed_up"
+	)
 	optional.add_argument(
 		"--netns",
 		help="network namespace for AM335x USB recovery, defaults to 'snagbootnet'",
